@@ -29,7 +29,7 @@ HashAberta* criar_tabela_aberta(int capacidade){
     return hash;
 }
 
-int inserir_aberta(HashAberta* hash, Aluno al, int (*func_hash)(long, int)){
+int inserir_aberta(HashAberta* hash, Aluno al, FuncHash func_hash){
     if (hash == NULL || func_hash == NULL || hash->qtd >= hash->capacidade) {
         return 0;
     }
@@ -51,7 +51,7 @@ int inserir_aberta(HashAberta* hash, Aluno al, int (*func_hash)(long, int)){
     return 0;
 }
 
-Aluno* busca_aberta(HashAberta* hash, long matricula, int (*func_hash)(long, int)){
+Aluno* busca_aberta(HashAberta* hash, long matricula, FuncHash func_hash){
     if (hash == NULL || func_hash == NULL || hash->qtd == 0) {
         return NULL;
     }

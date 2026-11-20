@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include "hash_aberto.h"
-#include "func_hash.h"
 
 struct hash_aberta {
     int qtd;
@@ -15,13 +14,16 @@ int sondagem_linear(int pos, int i, int capacidade){
 
 HashAberta* criar_tabela_aberta(int capacidade){
     HashAberta* hash = malloc(sizeof(HashAberta));
+    if(hash == NULL){
+        return NULL;
+    }
 
     hash->capacidade = capacidade;
     hash->qtd = 0;
     hash->colisoes = 0;
 
     hash->itens = calloc((size_t)capacidade, sizeof(Aluno*));
-    if(!hash->itens){
+    if(hash->itens == NULL) {
         free(hash);
         return NULL;
     }
@@ -35,17 +37,26 @@ int inserir_aberta(HashAberta* hash, Aluno al, FuncHash func_hash){
     }
 
     int pos = func_hash(al.matricula, hash->capacidade);
+    if (pos < 0 || pos >= hash->capacidade) {
+        return 0;
+    }
+
+    if(hash->itens[pos] != NULL){
+        hash->colisoes++;
+    }
+
     for(int i = 0; i < hash->capacidade; i++){
         int newPos = sondagem_linear(pos, i, hash->capacidade);
         if(hash->itens[newPos] == NULL){
             Aluno* no = malloc(sizeof(Aluno));
+            if(no == NULL){
+                return 0;
+            }
             *no = al;
             hash->itens[newPos] = no;
             hash->qtd++;
             return 1;
         }
-
-        hash->colisoes++;
     }
 
     return 0;
@@ -57,6 +68,9 @@ Aluno* busca_aberta(HashAberta* hash, long matricula, FuncHash func_hash){
     }
 
     int pos = func_hash(matricula, hash->capacidade);
+    if (pos < 0 || pos >= hash->capacidade) {
+        return NULL;
+    }
 
     for(int i = 0; i < hash->capacidade; i++){
         int newPos = sondagem_linear(pos, i, hash->capacidade);

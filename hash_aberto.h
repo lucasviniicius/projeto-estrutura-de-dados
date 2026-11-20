@@ -1,4 +1,5 @@
 #include "aluno.h"
+#include "func_hash.h"
 
 typedef struct hash_aberta HashAberta;
 

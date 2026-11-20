@@ -4,9 +4,15 @@ int hash_divisao(long chave, int tam){
     return chave % tam;
 }
 
-int hash_multiplicacao (long chave, int tam){
-    double A = 0.7834;
-    double val = chave * A;
-    val = val - (int) val;
-    return (int) (tam * val);
+int hash_dobra (long chave, int tam){
+    long valor = (chave < 0) ? -chave : chave;
+    long soma = 0;
+    const long base = 100;
+
+    while (valor > 0) {
+        soma += valor % base;
+        valor /= base;
+    }
+
+    return (int)(soma % tam);
 }

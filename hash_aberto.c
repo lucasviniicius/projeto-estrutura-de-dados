@@ -29,12 +29,12 @@ HashAberta* criar_tabela_aberta(int capacidade){
     return hash;
 }
 
-int inserir_aberta(HashAberta* hash, Aluno al){
-    if(hash == NULL || hash->qtd == hash->capacidade){
+int inserir_aberta(HashAberta* hash, Aluno al, int (*func_hash)(long, int)){
+    if (hash == NULL || func_hash == NULL || hash->qtd >= hash->capacidade) {
         return 0;
     }
 
-    int pos = hash_divisao(al.matricula, hash->capacidade);
+    int pos = func_hash(al.matricula, hash->capacidade);
     for(int i = 0; i < hash->capacidade; i++){
         int newPos = sondagem_linear(pos, i, hash->capacidade);
         if(hash->itens[newPos] == NULL){
@@ -51,12 +51,12 @@ int inserir_aberta(HashAberta* hash, Aluno al){
     return 0;
 }
 
-Aluno* busca_aberta(HashAberta* hash, long matricula){
-    if(hash == NULL || hash->qtd == 0){
-        return 0;
+Aluno* busca_aberta(HashAberta* hash, long matricula, int (*func_hash)(long, int)){
+    if (hash == NULL || func_hash == NULL || hash->qtd == 0) {
+        return NULL;
     }
 
-    int pos = hash_divisao(matricula, hash->capacidade);
+    int pos = func_hash(matricula, hash->capacidade);
 
     for(int i = 0; i < hash->capacidade; i++){
         int newPos = sondagem_linear(pos, i, hash->capacidade);

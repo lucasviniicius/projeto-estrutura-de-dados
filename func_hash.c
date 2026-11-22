@@ -1,18 +1,21 @@
 #include "func_hash.h"
 
-int hash_divisao(long chave, int tam){
+int hash_divisao(long long chave, int tam){
     return chave % tam;
 }
 
-int hash_dobra (long chave, int tam){
-    long valor = (chave < 0) ? -chave : chave;
-    long soma = 0;
-    const long base = 100;
+int hash_dobra(long long chave, int tam) {
+    if (chave < 0) chave = -chave;
 
-    while (valor > 0) {
-        soma += valor % base;
-        valor /= base;
+    long long soma = 0;
+    long long peso = 1;
+
+    while (chave > 0) {
+        long long bloco = chave % 1000;
+        soma = (soma + bloco * peso) % tam;
+        peso = (peso * 1000) % tam;
+        chave /= 1000;
     }
 
-    return (int)(soma % tam);
+    return (int)soma;
 }

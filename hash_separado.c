@@ -9,7 +9,7 @@ struct no_hash{
 struct hash_separado{
     int qtd;
     int capacidade;
-    long colisoes;
+    long long colisoes;
     NoHash** vetor;
 };
 
@@ -59,7 +59,7 @@ int inserir_separado(HashSeparado* hash, Aluno al, FuncHash func_hash){
     return 1;
 }
 
-Aluno* buscar_separado(HashSeparado* hash, long matricula, FuncHash func_hash){
+Aluno* buscar_separado(HashSeparado* hash, long long matricula, FuncHash func_hash){
     if (hash == NULL || func_hash == NULL || hash->qtd == 0 || hash->capacidade <= 0) {
         return NULL;
     }
@@ -96,4 +96,16 @@ void liberar_separado(HashSeparado* hash){
     }
     free(hash->vetor);
     free(hash);
+}
+
+int obter_qtd_separado(HashSeparado* hash) {
+    return (hash != NULL) ? hash->qtd : 0;
+}
+
+long long obter_colisoes_separado(HashSeparado* hash) {
+    return (hash != NULL) ? hash->colisoes : 0;
+}
+
+void zerar_colisoes_separado(HashSeparado* hash) {
+    if (hash != NULL) hash->colisoes = 0;
 }

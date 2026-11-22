@@ -9,7 +9,7 @@
 #include "hash_aberto.h"
 #include "hash_separado.h"
 
-#define NUM_BUSCAS 10000
+#define NUM_BUSCAS 1000
 
 // Calcula o tempo decorrido em segundos usando <time.h>
 double calcular_tempo(clock_t inicio, clock_t fim) {

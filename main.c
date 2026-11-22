@@ -17,7 +17,7 @@ int main() {
     }
 
     printf("Carregando base de dados...\n");
-    int total = carregar_base("alunos.csv", base, MAX_REGISTROS);
+    int total = carregar_base("alunos.txt", base, MAX_REGISTROS);
     if (total <= 0) {
         free(base);
         return 1;

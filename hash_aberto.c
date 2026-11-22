@@ -4,7 +4,7 @@
 struct hash_aberta {
     int qtd;
     int capacidade;
-    long colisoes;
+    long long colisoes;
     Aluno** itens;
 };
 
@@ -62,7 +62,7 @@ int inserir_aberta(HashAberta* hash, Aluno al, FuncHash func_hash){
     return 0;
 }
 
-Aluno* busca_aberta(HashAberta* hash, long matricula, FuncHash func_hash){
+Aluno* busca_aberta(HashAberta* hash, long long matricula, FuncHash func_hash){
     if (hash == NULL || func_hash == NULL || hash->qtd == 0) {
         return NULL;
     }
@@ -100,4 +100,16 @@ void liberar_aberta(HashAberta* hash){
     }
 
     free(hash);
+}
+
+int obter_qtd_aberta(HashAberta* hash) {
+    return (hash != NULL) ? hash->qtd : 0;
+}
+
+long long obter_colisoes_aberta(HashAberta* hash) {
+    return (hash != NULL) ? hash->colisoes : 0;
+}
+
+void zerar_colisoes_aberta(HashAberta* hash) {
+    if (hash != NULL) hash->colisoes = 0;
 }

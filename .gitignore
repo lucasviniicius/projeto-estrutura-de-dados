@@ -1,6 +1,6 @@
 *.exe
-*.csv
+*.o
 *.txt
-.vscode/
 alunos.txt
-*.exe
+.vscode/
+projeto

@@ -6,15 +6,20 @@ struct hash_aberta {
     int capacidade;
     long long colisoes;
     Aluno** itens;
+    unsigned char* indice_usado;
 };
 
-int sondagem_linear(int pos, int i, int capacidade){
+static int sondagem_linear(int pos, int i, int capacidade) {
     return (pos + i) % capacidade;
 }
 
-HashAberta* criar_tabela_aberta(int capacidade){
+HashAberta* criar_tabela_aberta(int capacidade) {
+    if (capacidade <= 0) {
+        return NULL;
+    }
+
     HashAberta* hash = malloc(sizeof(HashAberta));
-    if(hash == NULL){
+    if (hash == NULL) {
         return NULL;
     }
 
@@ -23,7 +28,14 @@ HashAberta* criar_tabela_aberta(int capacidade){
     hash->colisoes = 0;
 
     hash->itens = calloc((size_t)capacidade, sizeof(Aluno*));
-    if(hash->itens == NULL) {
+    if (hash->itens == NULL) {
+        free(hash);
+        return NULL;
+    }
+
+    hash->indice_usado = calloc((size_t)capacidade, sizeof(unsigned char));
+    if (hash->indice_usado == NULL) {
+        free(hash->itens);
         free(hash);
         return NULL;
     }
@@ -31,7 +43,7 @@ HashAberta* criar_tabela_aberta(int capacidade){
     return hash;
 }
 
-int inserir_aberta(HashAberta* hash, Aluno al, FuncHash func_hash){
+int inserir_aberta(HashAberta* hash, Aluno al, FuncHash func_hash) {
     if (hash == NULL || func_hash == NULL || hash->qtd >= hash->capacidade) {
         return 0;
     }
@@ -41,20 +53,23 @@ int inserir_aberta(HashAberta* hash, Aluno al, FuncHash func_hash){
         return 0;
     }
 
-    if(hash->itens[pos] != NULL){
-        hash->colisoes++;
-    }
-
-    for(int i = 0; i < hash->capacidade; i++){
+    for (int i = 0; i < hash->capacidade; i++) {
         int newPos = sondagem_linear(pos, i, hash->capacidade);
-        if(hash->itens[newPos] == NULL){
+        if (hash->itens[newPos] == NULL) {
             Aluno* no = malloc(sizeof(Aluno));
-            if(no == NULL){
+            if (no == NULL) {
                 return 0;
             }
             *no = al;
             hash->itens[newPos] = no;
             hash->qtd++;
+
+            if (hash->indice_usado[pos]) {
+                hash->colisoes++;
+            } else {
+                hash->indice_usado[pos] = 1;
+            }
+
             return 1;
         }
     }
@@ -62,7 +77,7 @@ int inserir_aberta(HashAberta* hash, Aluno al, FuncHash func_hash){
     return 0;
 }
 
-Aluno* busca_aberta(HashAberta* hash, long long matricula, FuncHash func_hash){
+Aluno* busca_aberta(HashAberta* hash, long long matricula, FuncHash func_hash) {
     if (hash == NULL || func_hash == NULL || hash->qtd == 0) {
         return NULL;
     }
@@ -72,14 +87,14 @@ Aluno* busca_aberta(HashAberta* hash, long long matricula, FuncHash func_hash){
         return NULL;
     }
 
-    for(int i = 0; i < hash->capacidade; i++){
+    for (int i = 0; i < hash->capacidade; i++) {
         int newPos = sondagem_linear(pos, i, hash->capacidade);
 
-        if(hash->itens[newPos] == NULL){
+        if (hash->itens[newPos] == NULL) {
             return NULL;
         }
 
-        if(hash->itens[newPos]->matricula == matricula){
+        if (hash->itens[newPos]->matricula == matricula) {
             return hash->itens[newPos];
         }
     }
@@ -87,18 +102,19 @@ Aluno* busca_aberta(HashAberta* hash, long long matricula, FuncHash func_hash){
     return NULL;
 }
 
-void liberar_aberta(HashAberta* hash){
-    if(hash == NULL){
+void liberar_aberta(HashAberta* hash) {
+    if (hash == NULL) {
         return;
     }
 
-    if(hash->itens != NULL){
-        for(int i = 0; i < hash->capacidade; i++){
+    if (hash->itens != NULL) {
+        for (int i = 0; i < hash->capacidade; i++) {
             free(hash->itens[i]);
         }
         free(hash->itens);
     }
 
+    free(hash->indice_usado);
     free(hash);
 }
 
@@ -111,5 +127,7 @@ long long obter_colisoes_aberta(HashAberta* hash) {
 }
 
 void zerar_colisoes_aberta(HashAberta* hash) {
-    if (hash != NULL) hash->colisoes = 0;
+    if (hash != NULL) {
+        hash->colisoes = 0;
+    }
 }

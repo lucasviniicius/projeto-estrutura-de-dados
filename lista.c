@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include "lista.h"
 
+typedef struct elem Elem;
+
 struct elem {
     Aluno dado;
     Elem* prox;
@@ -13,10 +15,10 @@ struct lista {
     Elem* final;
 };
 
-Lista* criar_lista_dupla(){
+Lista* criar_lista_dupla(void) {
     Lista* li = malloc(sizeof(Lista));
 
-    if(li != NULL){
+    if (li != NULL) {
         li->inicio = NULL;
         li->final = NULL;
         li->qtd = 0;
@@ -25,13 +27,13 @@ Lista* criar_lista_dupla(){
     return li;
 }
 
-void liberar_lista_dupla(Lista* li){
-    if(li == NULL){
+void liberar_lista_dupla(Lista* li) {
+    if (li == NULL) {
         return;
     }
 
     Elem* no = li->inicio;
-    for(int i = 0; i < li->qtd; i++){
+    while (no != NULL) {
         Elem* atual = no;
         no = no->prox;
         free(atual);
@@ -40,15 +42,19 @@ void liberar_lista_dupla(Lista* li){
     free(li);
 }
 
-int inserir_lista_dupla(Lista* li, Aluno al){
-    if(li == NULL){
+int inserir_lista_dupla(Lista* li, Aluno al) {
+    if (li == NULL) {
         return 0;
     }
 
     Elem* no = malloc(sizeof(Elem));
+    if (no == NULL) {
+        return 0;
+    }
+
     no->dado = al;
 
-    if(li->qtd == 0){
+    if (li->qtd == 0) {
         no->ant = NULL;
         li->inicio = no;
     } else {
@@ -63,19 +69,22 @@ int inserir_lista_dupla(Lista* li, Aluno al){
     return 1;
 }
 
-int buscar_lista_dupla(Lista* li, long matricula){
-    if(li == NULL || li->qtd == 0){
-        return 0;
+Aluno* buscar_lista_dupla(Lista* li, long long matricula) {
+    if (li == NULL || li->qtd == 0) {
+        return NULL;
     }
 
     Elem* no = li->inicio;
-
-    for(int i = 0; i < li->qtd; i++){
-        if(no->dado.matricula == matricula){
-            return 1;
+    while (no != NULL) {
+        if (no->dado.matricula == matricula) {
+            return &(no->dado);
         }
         no = no->prox;
     }
 
-    return 0;
+    return NULL;
+}
+
+int obter_qtd_lista_dupla(Lista* li) {
+    return (li != NULL) ? li->qtd : 0;
 }

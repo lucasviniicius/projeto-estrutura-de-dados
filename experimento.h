@@ -4,6 +4,6 @@
 #include "aluno.h"
 
 int carregar_base(const char* caminho, Aluno* vetor, int max_registros);
-void rodar_experimentos(Aluno* base, int total_lidos);
+int rodar_experimentos(Aluno* base, int total_lidos, const char* caminho_csv);
 
 #endif
